@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "demo": {
+      "command": "python3",
+      "args": ["examples/vulnerable-mcp-demo/server.py"]
+    },
+    "filesystem-unpinned": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "~/.ssh"]
+    }
+  }
+}

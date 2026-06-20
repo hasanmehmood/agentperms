@@ -1,0 +1,33 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "agentperms"
+version = "0.1.0"
+description = "Least-privilege permissions for AI agents and MCP tools. Record what your agent does, auto-generate a safe policy, and block dangerous tool calls before they happen."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "AgentPerms" }]
+keywords = ["mcp", "ai", "agents", "security", "least-privilege", "permissions"]
+dependencies = [
+    "typer>=0.12",
+    "pydantic>=2.5",
+    "pyyaml>=6.0",
+    "jinja2>=3.1",
+    "rich>=13.0",
+]
+
+[project.optional-dependencies]
+dashboard = ["fastapi>=0.110", "uvicorn>=0.29"]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+agentperms = "agentperms.cli:app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/agentperms"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

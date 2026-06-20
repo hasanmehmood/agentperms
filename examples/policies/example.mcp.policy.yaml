@@ -1,0 +1,36 @@
+version: 1
+
+servers:
+  github:
+    allowed_tools:
+      - list_repos
+      - read_file
+      - create_issue
+    denied_tools:
+      - delete_repo
+      - write_secret
+      - force_push
+
+  filesystem:
+    allowed_paths:
+      - ./src
+      - ./docs
+    denied_paths:
+      - ~/.ssh
+      - ~/.env
+      - /etc
+    denied_patterns:
+      - "*.pem"
+      - "*.key"
+
+approvals:
+  require_human_approval:
+    - gmail.send_email
+    - github.merge_pr
+    - postgres.execute_write
+    - shell.exec
+
+redaction:
+  secrets: true
+  emails: true
+  api_keys: true

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AgentPerms Report</title>
+<style>
+  :root { --bg:#0d1117; --card:#161b22; --line:#30363d; --fg:#e6edf3; --muted:#8b949e;
+          --red:#f85149; --amber:#d29922; --green:#3fb950; --blue:#58a6ff; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg);
+         font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
+  .wrap { max-width:940px; margin:0 auto; padding:40px 24px; }
+  h1 { font-size:26px; margin:0 0 4px; }
+  .sub { color:var(--muted); margin:0 0 28px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:16px; margin-bottom:28px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:18px; }
+  .card .n { font-size:30px; font-weight:700; }
+  .card .l { color:var(--muted); font-size:13px; text-transform:uppercase; letter-spacing:.04em; }
+  .score { display:flex; align-items:center; gap:20px; }
+  .gauge { --v:{{ risk_score }}; width:96px; height:96px; border-radius:50%;
+           background:conic-gradient(var(--ring) calc(var(--v)*1%), var(--line) 0);
+           display:grid; place-items:center; }
+  .gauge::before { content:""; width:74px; height:74px; border-radius:50%; background:var(--card); position:absolute; }
+  .gauge span { position:relative; font-size:24px; font-weight:700; }
+  section { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:20px 22px; margin-bottom:20px; }
+  section h2 { font-size:16px; margin:0 0 14px; }
+  table { width:100%; border-collapse:collapse; font-size:14px; }
+  th,td { text-align:left; padding:8px 10px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { color:var(--muted); font-weight:600; }
+  .tag { display:inline-block; padding:2px 8px; border-radius:999px; font-size:12px; font-weight:600; }
+  .high { background:rgba(248,81,73,.15); color:var(--red); }
+  .medium { background:rgba(210,153,34,.15); color:var(--amber); }
+  .low { background:rgba(63,185,80,.15); color:var(--green); }
+  .ok { color:var(--green); } .bad { color:var(--red); }
+  code { background:#0d1117; padding:1px 6px; border-radius:6px; color:var(--blue); }
+  .rec { border-left:3px solid var(--blue); padding-left:14px; color:var(--fg); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🛡️ AgentPerms Report</h1>
+  <p class="sub">Least-privilege analysis of your MCP agent setup.</p>
+
+  <div class="card score"
+       style="--ring: {% if risk_score >= 60 %}var(--red){% elif risk_score >= 30 %}var(--amber){% else %}var(--green){% endif %};">
+    <div class="gauge"><span>{{ risk_score }}</span></div>
+    <div>
+      <div class="l">Risk score</div>
+      <div class="n">{{ risk_score }}/100</div>
+      <div class="rec">{{ recommended_action }}</div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card"><div class="n">{{ high_count }}</div><div class="l">High-risk findings</div></div>
+    <div class="card"><div class="n">{{ secrets_count }}</div><div class="l">Secret/sensitive exposures</div></div>
+    <div class="card"><div class="n">{{ unpinned_count }}</div><div class="l">Unpinned servers</div></div>
+    <div class="card"><div class="n">{{ policy_coverage }}%</div><div class="l">Policy coverage</div></div>
+    <div class="card"><div class="n {% if attacks_blocked == attacks_total %}ok{% else %}bad{% endif %}">{{ attacks_blocked }}/{{ attacks_total }}</div><div class="l">Attacks blocked</div></div>
+  </div>
+
+  <section>
+    <h2>Scan findings</h2>
+    {% if findings %}
+    <table>
+      <tr><th>Severity</th><th>Server</th><th>Kind</th><th>Detail</th></tr>
+      {% for f in findings %}
+      <tr>
+        <td><span class="tag {{ f.severity.value }}">{{ f.severity.value }}</span></td>
+        <td>{{ f.server }}</td><td><code>{{ f.kind }}</code></td><td>{{ f.message }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+    {% else %}<p class="ok">No static findings.</p>{% endif %}
+  </section>
+
+  <section>
+    <h2>Replay results</h2>
+    <table>
+      <tr><th>Attack</th><th>Tool</th><th>Outcome</th><th>Reason</th></tr>
+      {% for r in attack_results %}
+      <tr>
+        <td>{{ r.attack.description }}</td>
+        <td><code>{{ r.attack.server }}.{{ r.attack.tool }}</code></td>
+        <td>{% if r.blocked %}<span class="tag low">blocked</span>{% else %}<span class="tag high">ALLOWED</span>{% endif %}</td>
+        <td>{{ r.reason }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </section>
+
+  <section>
+    <h2>Observed tools ({{ tools_observed|length }})</h2>
+    {% if tools_observed %}<p>{% for t in tools_observed %}<code>{{ t }}</code> {% endfor %}</p>
+    {% else %}<p class="sub">No traces recorded yet — run <code>agentperms record</code>.</p>{% endif %}
+  </section>
+</div>
+</body>
+</html>

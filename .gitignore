@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+build/
+dist/
+.pytest_cache/
+
+# AgentPerms generated artifacts
+.agentperms/
+traces/
+mcp.policy.yaml
+mcp.lock
+agentperms-report.html
+*.agentperms.bak
+
+# Secrets and local scratch
+.env
+initial-implementation.txt

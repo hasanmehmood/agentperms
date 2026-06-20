@@ -1,0 +1,23 @@
+name: AgentPerms
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  agentperms:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install AgentPerms
+        run: pip install agentperms
+      - name: Scan MCP configs
+        run: agentperms scan --path .
+      - name: Check tool lockfile for drift (tool poisoning)
+        run: agentperms lock --check
+      - name: Replay attack pack against the policy
+        run: agentperms replay

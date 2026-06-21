@@ -8,9 +8,22 @@ version = "0.1.0"
 description = "Least-privilege permissions for AI agents and MCP tools. Record what your agent does, auto-generate a safe policy, and block dangerous tool calls before they happen."
 readme = "README.md"
 requires-python = ">=3.10"
-license = { text = "MIT" }
-authors = [{ name = "AgentPerms" }]
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Hassan Mehmood", email = "hassan@boostpanda.ai" }]
 keywords = ["mcp", "ai", "agents", "security", "least-privilege", "permissions"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: System Administrators",
+    "Topic :: Security",
+    "Topic :: Software Development :: Quality Assurance",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: OS Independent",
+]
 dependencies = [
     "typer>=0.12",
     "pydantic>=2.5",
@@ -22,6 +35,11 @@ dependencies = [
 [project.optional-dependencies]
 dashboard = ["fastapi>=0.110", "uvicorn>=0.29"]
 dev = ["pytest>=8.0"]
+
+[project.urls]
+Homepage = "https://github.com/hasanmehmood/agentperms"
+Repository = "https://github.com/hasanmehmood/agentperms"
+Issues = "https://github.com/hasanmehmood/agentperms/issues"
 
 [project.scripts]
 agentperms = "agentperms.cli:app"

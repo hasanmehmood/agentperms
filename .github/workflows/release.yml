@@ -5,8 +5,8 @@ name: Publish to PyPI
 #
 # One-time setup on PyPI: https://pypi.org/manage/account/publishing/
 #   - Project name: agentperms
-#   - Owner: OWNER         (repo owner)
-#   - Repository: REPO     (repo name)
+#   - Owner: hasanmehmood
+#   - Repository: agentperms
 #   - Workflow filename: release.yml
 #   - Environment name: pypi
 

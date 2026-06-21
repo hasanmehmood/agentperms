@@ -18,3 +18,4 @@ agentperms-report.html
 # Secrets and local scratch
 .env
 initial-implementation.txt
+LOCAL_NOTES.md

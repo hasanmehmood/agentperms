@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "agentperms"
-version = "0.1.0"
+version = "0.1.1"
 description = "Least-privilege permissions for AI agents and MCP tools. Record what your agent does, auto-generate a safe policy, and block dangerous tool calls before they happen."
 readme = "README.md"
 requires-python = ">=3.10"
